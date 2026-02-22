@@ -13,7 +13,7 @@ export class MyMCP extends McpAgent<Env, Record<string, never>, Props> {
 	});
 
 	function formatResponse(data: any) {
-	  let text = ''
+	  let text = '';
 	
 	  if (typeof data === 'string') {
 	    text = data
