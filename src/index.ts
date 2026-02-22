@@ -79,7 +79,7 @@ export class MyMCP extends McpAgent<Env, Record<string, never>, Props> {
 	
 	private getConfig(config: any) {
 	  return {
-	    hubspotAccessToken: config?.HUBSPOT_ACCESS_TOKEN || Env.HUBSPOT_ACCESS_TOKEN
+	    hubspotAccessToken: config?.HUBSPOT_ACCESS_TOKEN ?? (this as any).env?.HUBSPOT_ACCESS_TOKEN
 	  }
 	}
 	
