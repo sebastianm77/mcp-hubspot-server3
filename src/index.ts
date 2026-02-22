@@ -12,7 +12,7 @@ export class MyMCP extends McpAgent<Env, Record<string, never>, Props> {
 	    description: "An extensive MCP for the HubSpot API"
 	});
 
-	function formatResponse(data: any) {
+	private formatResponse(data: any) {
 	  let text = '';
 	
 	  if (typeof data === 'string') {
@@ -28,7 +28,7 @@ export class MyMCP extends McpAgent<Env, Record<string, never>, Props> {
 	  return { content: [{ type: "text", text }] }
 	}
 	
-	async function makeApiRequest(apiKey: string, endpoint: string, params: Record<string, any> = {}, method = 'GET', body: Record<string, any> | null = null) {
+	private async makeApiRequest(apiKey: string, endpoint: string, params: Record<string, any> = {}, method = 'GET', body: Record<string, any> | null = null) {
 	  if (!apiKey) {
 	    throw new Error("HUBSPOT_ACCESS_TOKEN environment variable is not set")
 	  }
@@ -60,24 +60,24 @@ export class MyMCP extends McpAgent<Env, Record<string, never>, Props> {
 	  return await response.json()
 	}
 	
-	async function makeApiRequestWithErrorHandling(apiKey: string, endpoint: string, params: Record<string, any> = {}, method = 'GET', body: Record<string, any> | null = null) {
+	private async makeApiRequestWithErrorHandling(apiKey: string, endpoint: string, params: Record<string, any> = {}, method = 'GET', body: Record<string, any> | null = null) {
 	  try {
-	    const data = await makeApiRequest(apiKey, endpoint, params, method, body)
-	    return formatResponse(data)
+	    const data = await this.makeApiRequest(apiKey, endpoint, params, method, body)
+	    return this.formatResponse(data)
 	  } catch (error: any) {
-	    return formatResponse(`Error performing request: ${error.message}`)
+	    return this.formatResponse(`Error performing request: ${error.message}`)
 	  }
 	}
 	
-	async function handleEndpoint(apiCall: () => Promise<any>) {
+	private async handleEndpoint(apiCall: () => Promise<any>) {
 	  try {
 	    return await apiCall()
 	  } catch (error: any) {
-	    return formatResponse(error.message)
+	    return this.formatResponse(error.message)
 	  }
 	}
 	
-	function getConfig(config: any) {
+	private getConfig(config: any) {
 	  return {
 	    hubspotAccessToken: config?.HUBSPOT_ACCESS_TOKEN || process.env.HUBSPOT_ACCESS_TOKEN,
 	    telemetryEnabled: config?.TELEMETRY_ENABLED || process.env.TELEMETRY_ENABLED || "true"
